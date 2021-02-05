@@ -276,6 +276,53 @@ EventScript_EndSurface:: @ 8290BA8
 	releaseall
 	end
 
+EventScript_UseHeadbutt::
+	lockall
+	checkpartymove MOVE_HEADBUTT
+	compare VAR_RESULT, PARTY_SIZE
+	goto_if_eq EventScript_CantHeadbutt
+	setfieldeffectargument 0, VAR_RESULT
+	bufferpartymonnick 0, VAR_RESULT
+	buffermovename 1, MOVE_HEADBUTT
+	msgbox Text_WantToHeadbutt, MSGBOX_YESNO
+	compare VAR_RESULT, NO
+	goto_if_eq EventScript_CancelHeadbutt
+	msgbox Text_MonUsedFieldMove, MSGBOX_DEFAULT
+	closemessage
+	dofieldeffect FLDEFF_USE_STRENGTH
+	waitstate
+	delay 5
+	playse SE_M_HEADBUTT
+	waitse
+	delay 16
+	setvar VAR_0x8004, 0  @ vertical pan
+	setvar VAR_0x8005, 2   @ horizontal pan
+	setvar VAR_0x8006, 3  @ num shakes
+	setvar VAR_0x8007, 1   @ shake delay
+	special ShakeCamera
+	waitstate
+	delay 10
+	special RockSmashWildEncounter
+	compare VAR_RESULT, 0
+	goto_if_eq EventScript_UseHeadbutt_NoEncounter
+	waitstate
+	releaseall
+	end
+
+EventScript_CantHeadbutt::
+	msgbox Text_CantHeadbutt, MSGBOX_DEFAULT
+	releaseall
+	end
+
+EventScript_CancelHeadbutt::
+	closemessage
+	releaseall
+	end
+
+EventScript_UseHeadbutt_NoEncounter::
+	releaseall
+	end
+
 Text_CantDive: @ 8290BAA
 	.string "The sea is deep here. A POKéMON\n"
 	.string "may be able to go underwater.$"
@@ -301,3 +348,10 @@ EventScript_FailSweetScent:: @ 8290CAE
 
 Text_FailSweetScent: @ 8290CB7
 	.string "Looks like there's nothing here…$"
+
+Text_WantToHeadbutt::
+.string "A Pokémon could be in this tree.\n"
+.string "Would you like to {COLOR RED}Headbutt{COLOR DARK_GREY} it?$"
+
+Text_CantHeadbutt:
+.string "A Pokémon could be in this tree.$"
