@@ -537,4 +537,5 @@ gSpecials:: @ 81DBA64
 	def_special TrySetBattleTowerLinkType
 	def_special SetTotemBoost
     def_special NameRival
-
+	def_special TeleportCamera
+	def_special ReturnCameraToPlayer
